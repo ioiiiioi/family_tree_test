@@ -23,7 +23,8 @@ class PersonView(View):
 
     def get(self, request):
         rendered_data = Person.objects.annotate(
-            birthDate=functions.Cast(F("birth_date"),CharField())
+            birthDate=functions.Cast(F("birth_date"),CharField()),
+            deathDate=functions.Cast(F("death_date"),CharField())
         )
         if not rendered_data.exists():
             listed_data = [
@@ -180,5 +181,6 @@ class PersonView(View):
             obj["name"] = self.name_shorter(data.name)
             obj["photo"] = data.photo.url if data.photo else "https://t3.ftcdn.net/jpg/03/46/83/96/240_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
             obj["birthDate"] = data.birthDate
+            obj["deathDate"] = data.deathDate
             listed_data.append(obj)
         return render(request, 'family_tree.html', {'data': json.dumps(listed_data)})
